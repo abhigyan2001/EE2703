@@ -1,5 +1,7 @@
 # EE2703 - January-May 2021
 
+If you feel that this repo was of any use to you, do consider starring it, at least as long as you're doing this course. It'll help others who might want help too, so think of it as a community service ;)
+
 This course was actually one of the most enjoyable ones for me in the 4th semester of Electrical Engineering. Had a lot of fun doing this work. 
 
 Hope you find what you seek, seeker of help and wisdom!
