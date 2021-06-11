@@ -1,0 +1,114 @@
+args = command_line_arguments_list
+l = length(args)
+if l!=2, then
+	print("Please provide valid netlist file name")
+	exit
+else,
+	filename = args[1]
+
+lines = linewise_split(read(filename))
+
+create_empty_variable strt_ckt_def
+create_empty_variable end_ckt_def
+
+all_lines = join(lines," ")
+
+if either ".circuit" or ".end" is not in all_lines, then
+	print("Please provide a valid netlist file")
+	exit
+
+for each line l in lines,
+	if l begins with ".circuit", then
+		strt_ckt_def = lines.index(l)
+	else, if l begins with ".end", then
+		end_ckt_def = l.index(l)
+
+create_empty_2DArray keywords
+
+for each line l in lines between index strt_ckt_def and end_ckt_def,
+	n = lines.index(l) - strt_ckt_def
+	for each word in l,
+		append word to row_index n of keywords
+
+create_empty_Array node_names
+create_empty_Array from_nodes
+create_empty_Array to_nodes
+create_empty_Array control_low_nodes
+create_empty_Array control_high_nodes
+create_empty_Array control_voltages
+create_empty_Array values
+
+is_ok = false
+
+for each row r in keywords,
+	line_number = keywords.index(row)+strt_ckt_def
+	if r[0] is not alphanumeric, then
+		print("Please enter valid SPICE commands, error on line  "+line_number)
+		exit
+	else, if r[0].characterAt(0) is not 'R' or 'L' or 'C' or 'V' or 'I' or 'E' or 'G' or 'H' or 'F', then
+		print("Please enter valid SPICE commands, error on line "+line_number)
+		exit
+	else, if r[0].characterAt(0) == 'R' or 'L' or 'C' or 'V' or 'I', then
+		if length(r) != 4, then
+			if length(r) > 4, then
+				if r[4] begins with "#", then
+					is_ok = true
+			if not is_ok, then
+				print("Please enter valid SPICE commands, error on line "+line_number)
+				exit
+		else, if r[3] is not numeric, then
+			print("Please enter a valid value, error on line "+line_number)
+			exit
+		append r[0] to node_names
+		append r[1] to from_nodes()
+		append r[2] to to_nodes
+		append empty to control_low_nodes
+		append empty to control_high_nodes
+		append empty to control_voltages
+		append r[3] to values
+	else, if r[0].characterAt(0) == 'E' or 'G', then
+		is_ok = false
+		if length(r) != 6, then
+			if length(r) > 6, then
+				if r[6] begins with "#", then
+					is_ok = true
+			if not is_ok, then
+				print("Please enter valid SPICE commands, error on line "+line_number)
+				exit
+		else, if r[5] is not numeric, then
+			print("Please enter a valid value, error on line "+line_number)
+			exit
+		append r[0] to node_names
+		append r[1] to from_nodes
+		append r[2] to to_nodes
+		append r[3] to control_low_nodes
+		append r[4] to control_high_nodes
+		append r[5] to values
+		append empty to control_voltages
+	else, if r[0].characterAt(0) == 'H' or 'F', then
+		is_ok = false
+		if length(r) != 5, then
+			if length(r) > 5, then
+				if r[5] begins with "#", then
+					is_ok = true
+		if not is_ok, then
+				print("Please enter valid SPICE commands, error at line number "+line_number)
+				exit
+		else, if r[4] is not numeric, then
+			print("Please enter a valid value, error at line number "+line_number)
+			exit
+		append r[0] to node_names
+		append r[1] to from_nodes
+		append r[2] to to_nodes
+		append empty to control_low_nodes
+		append empty to control_high_nodes
+		append r[3] to control_voltages
+		append r[4] to values
+for each i from (end_ckt_def - strt_ckt_def - 1) to 0,
+	if node_names[i].characterAt(0) is 'R' or 'L' or 'C' or 'V' or 'I', then
+		print(join([values[i],to_nodes[i],from_nodes[i],node_names[i]]," "))
+	else, if node_types[i].characterAt(0) is 'E' or 'G', then
+		print(join([values[i],control_high_nodes[i],control_low_nodes[i],to_nodes[i],from_nodes[i],node_names[i]]," "))
+	else, if node_types[i].characterAt(0) is 'H' or 'F', then
+		print(join([values[i],control_voltages[i],to_nodes[i],from_nodes[i],node_names[i]]," "))
+exit
