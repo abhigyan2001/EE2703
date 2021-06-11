@@ -12,7 +12,7 @@ The reason why I tell you to copy and write code line by line is because you'll 
 
 It'll also provide you with an understanding of what to do when you're faced with a similar situation later. 
 
-It's still copying, and there's no two ways about that, but it's definitely better if you know what you're copying than if you don't. I'm not judging if you want to straight up copy-pasta without understanding though... Feel free to do that if you want to ¯\_(ツ)_/¯ 
+It's still copying, and there's no two ways about that, but it's definitely better if you know what you're copying than if you don't. I'm not judging if you want to straight up copy-pasta without understanding though... Feel free to do that if you want to ¯\\\_(ツ)\_/¯ 
 
 But if you get caught, remember I told you so.
 
